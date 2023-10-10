@@ -1,22 +1,26 @@
 import requests
+import pyeapi
 import json
+from jinja2 import Environment, FileSystemLoader
 
-# Define the JSON-RPC request template with variables
-request_template = {
-    "jsonrpc": "2.0",
-    "method": "runCmds",
-    "params": {
-        "version": 1,
-        "cmds": [],
-        "format": "json"
-    },
-    "id": 1
-}
 
+environment = Environment(loader=FileSystemLoader("templates/"))
+spine_template = environment.get_template("spines_template.j2")
+leaf_template = environment.get_template("leafs_template.j2")
 # Device-specific information
-with open('devices.json', 'r') as devices:
-    devices = json.load(devices)
-print(devices)
+with open('devices.json', 'r') as DC:
+    datacenters = json.load(DC)
+
+
+
+for datacenter, site in datacenters.items():
+    for device in site['Spines']:
+        print(f'Currently configuring {device}')
+        node = pyeapi.connect_to(device)
+
+        result = node.config([spine_template])
+        print(result)
+
 
 
 # Replace variables in the request template
