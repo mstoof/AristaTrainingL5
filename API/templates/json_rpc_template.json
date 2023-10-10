@@ -1,0 +1,15 @@
+{
+    "jsonrpc": "2.0",
+    "method": "runCmds",
+    "params": {
+        "format": "json",
+        "timestamps": false,
+        "autoComplete": true,
+        "expandAliases": false,
+        "includeErrorDetail": false,
+        "cmds": [
+        ],
+        "version": 1
+    },
+    "id": "EapiExplorer-1"
+}

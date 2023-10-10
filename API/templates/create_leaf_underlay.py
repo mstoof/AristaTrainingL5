@@ -11,26 +11,16 @@ leaf_template = environment.get_template("leafs_template.j2")
 with open('devices.json', 'r') as DC:
     datacenters = json.load(DC)
 
-with open('templates/json_rpc_template.json', 'r') as rpc_template:
-    rpc_template = json.load(rpc_template)
+
 
 for datacenter, site in datacenters.items():
-    for name, devices in site.items():
-        for device, attributes in devices.items():
-
-            print(f'Currently configuring {device}')
-            url = f"https://{device}/command-api"
-            if name == 'Spines':
-                commands = spine_template.render(Interfaces=attributes['Interfaces'])
-            else:
-                commands = leaf_template.render(Interfaces=attributes['Interfaces'])
-            
-            rpc_template["params"]["cmds"] = commands
-            
-            request_json = json.dumps(rpc_template)
-            r = requests.post(url, auth=('arista', 'aristaklgj'), data=commands, verify=False)
-    
-
+    for device, attributes in site['Spines'].items():
+        print(f'Currently configuring {device}')
+        node = pyeapi.connect_to(device)
+        print(attributes)
+        print(spine_template.render(Interfaces=attributes['Interfaces']))
+        result = node.config(spine_template.render(Interfaces=attributes['Interfaces']))
+        # print(result)
 
 
 

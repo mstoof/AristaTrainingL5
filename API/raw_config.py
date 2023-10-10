@@ -2,7 +2,7 @@
 import requests
 
 # Declare the variable (string) for the URL of leaf1-DC1
-url = "https://192.168.0.21/command-api"
+url = "https://leaf1-DC1/command-api"
 
 # Use the open() function to open the file you just created, "r" means read-only
 commands = open("eth3.json", "r")
