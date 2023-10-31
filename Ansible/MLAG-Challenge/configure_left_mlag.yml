@@ -1,0 +1,26 @@
+---
+- name: "MS / Configuring MLAG on all switches"
+  gather_facts: no
+  hosts: leafs_DC1,
+  vars: 
+    peer_link_vlan: 4094
+    peer_link_ip: 192.168.255.1
+    port_channel_id: 10
+    interfaces: ['e1', 'e2']
+  tasks:
+    - name: Configuring vlans 4094
+      arista.eos.eos_vlans:
+        config:
+        - vlan_id: 4094
+          state: active 
+        state: merged
+    - name: Configure MLAG with Left template
+      template:
+        src: "{{ lookup('env', 'PWD')}}/templates/mlag_template.j2"
+        dest: "{{ lookup('env', 'PWD')}}/configs/mlag_{{inventory_hostname}}.cfg"
+      vars:
+        local_interface_ip: "{{ peer_link_ip }}"
+        port_channel_interfaces: "{{ interfaces }}"
+        vlan_id: "{{ peer_link_vlan }}"
+        port_channel: "po{{ port_channel_id }}"
+    

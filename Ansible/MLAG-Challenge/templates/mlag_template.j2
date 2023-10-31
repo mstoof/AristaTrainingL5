@@ -1,0 +1,24 @@
+! MLAG configuration for {{ 'left' if local_interface_ip == '192.168.255.1' else 'right' }} side
+vlan {{ vlan_id }}
+   name MLAG_Peer_Link
+interface vlan {{ vlan_id }}
+   ip address {{ local_interface_ip }}/30
+   no autostate
+no spanning-tree vlan-id {{ vlan_id }}
+
+interface Port-Channel{{ port_channel }}
+   description MLAG_Peer_Link
+   switchport mode trunk
+   switchport trunk allowed vlan {{ vlan_id }}
+
+{% for intf in port_channel_interfaces %}
+interface {{ intf }}
+   channel-group {{ port_channel }} mode active
+{% endfor %}
+
+mlag configuration
+   local-interface vlan {{ vlan_id }}
+   peer-address {{ '192.168.255.2' if local_interface_ip == '192.168.255.1' else '192.168.255.1' }}
+   peer-link Port-Channel{{ port_channel }}
+   domain-id MLAG_Domain
+   reload-delay mlag 300

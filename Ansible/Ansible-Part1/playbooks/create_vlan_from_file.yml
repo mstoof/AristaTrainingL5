@@ -1,0 +1,7 @@
+---
+- hosts: leaf1-DC1
+  gather_facts: no
+  tasks:
+  - name: Create vlans from file
+    arista.eos.eos_config:
+      src: vlans.cfg

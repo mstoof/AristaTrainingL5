@@ -3,6 +3,10 @@
   hosts: all
   gather_facts: no
   tasks:
-    - name: "Save configs" 
-      arista.eos.eos_config:
-        lines: write 
+    # - name: "Save configs" 
+    #   arista.eos.eos_config:
+    #     lines: write 
+    - name: "Save configurations"
+      eos_command: 
+        commands:
+          - copy run start
