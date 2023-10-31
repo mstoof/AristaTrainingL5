@@ -1,0 +1,8 @@
+---
+- name: "MS: Save configs"
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: "Save configs" 
+      arista.eos.eos_config:
+        lines: write 

@@ -1,5 +1,6 @@
 ---
-  - hosts: leaf1-DC1
+  - hosts: all
+    gather_facts: no
     tasks:
     - name: Add User
       eos_user:
@@ -13,4 +14,3 @@
         name: automator
         sshkey: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
         state: present
-        
